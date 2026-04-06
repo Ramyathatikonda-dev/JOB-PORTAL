@@ -1,0 +1,248 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>TalentOrbit | Home</title>
+
+<!-- Bootstrap 5 -->
+<link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
+<link rel="stylesheet" href="css/style.css">
+<link href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/4.1.1/animate.min.css" rel="stylesheet"/>
+
+</head>
+<body>
+
+<!-- Navbar -->
+<nav class="navbar navbar-expand-lg navbar-dark bg-dark fixed-top">
+<div class="container">
+<a class="navbar-brand fw-bold" href="#">TalentOrbit</a>
+
+<button class="navbar-toggler" data-bs-toggle="collapse" data-bs-target="#navMenu">
+<span class="navbar-toggler-icon"></span>
+</button>
+
+<div class="collapse navbar-collapse" id="navMenu">
+<ul class="navbar-nav ms-auto">
+<li class="nav-item"><a class="nav-link" href="index.html">Home</a></li>
+<li class="nav-item"><a class="nav-link" href="about.html">About</a></li>
+<li class="nav-item"><a class="nav-link" href="jobs.html">Jobs</a></li>
+<li class="nav-item"><a class="nav-link" href="admin.html">Admin</a></li>
+<li class="nav-item"><a class="nav-link" href="contact.html">Contact</a></li>
+<li class="nav-item ms-3">
+    <button id="themeToggle" class="btn btn-outline-light">
+        🌙
+    </button>
+</li>
+
+<li class="nav-item" id="authArea"></li>
+<!-- <li class="nav-item"><a class="btn btn-outline-light ms-2" href="login.html">Login</a></li>
+<li class="nav-item"><a class="btn btn-warning ms-2" href="signup.html">Sign Up</a></li> -->
+</ul>
+</div>
+</div>
+</nav>
+
+<!-- Hero Section -->
+<section class="hero d-flex align-items-center text-center text-white">
+<div class="container">
+<h1 class="display-4 fw-bold animate__animated animate__fadeInDown">
+Find Your Dream Job Today
+</h1>
+<p class="lead animate__animated animate__fadeInUp">
+Connecting talent with opportunities worldwide
+</p>
+
+<div class="row justify-content-center mt-4">
+<div class="col-md-6">
+<div class="input-group shadow-lg">
+<input type="text" id="searchInput" class="form-control" placeholder="Search job title...">
+<!-- <button id="searchBtn" class="btn btn-warning">Search</button> -->
+
+</div>
+</div>
+</div>
+
+</div>
+</section>
+
+<section class="container my-5">
+    <!-- <h3 class="mb-3">Search Results</h3> -->
+    <div id="searchResults" class="row g-4"></div>
+</section>
+
+
+<!-- Featured Jobs -->
+<!-- <section class="container my-5">
+<h2 class="text-center mb-4">Featured Jobs</h2>
+<div class="row g-4">
+
+<div class="col-md-4">
+<div class="card job-card shadow-sm">
+<div class="card-body">
+<h5>Frontend Developer</h5>
+<p>Company: TechSoft</p>
+<p>Location: Bangalore</p>
+<button class="btn btn-outline-primary w-100">View Details</button>
+</div>
+</div>
+</div>
+
+<div class="col-md-4">
+<div class="card job-card shadow-sm">
+<div class="card-body">
+<h5>Data Analyst</h5>
+<p>Company: DataWorks</p>
+<p>Location: Hyderabad</p>
+<button class="btn btn-outline-primary w-100">View Details</button>
+</div>
+</div>
+</div>
+
+<div class="col-md-4">
+<div class="card job-card shadow-sm">
+<div class="card-body">
+<h5>UI/UX Designer</h5>
+<p>Company: Creative Labs</p>
+<p>Location: Chennai</p>
+<button class="btn btn-outline-primary w-100">View Details</button>
+</div>
+</div>
+</div>
+
+</div>
+</section> -->
+
+<!-- Footer
+<footer class="bg-dark text-white text-center p-3">
+© 2026 JobPortal. All Rights Reserved.
+</footer> -->
+
+<script src="js/navbar.js"></script>
+<script>
+const toggleBtn = document.getElementById("themeToggle");
+
+// Load saved theme
+if(localStorage.getItem("theme") === "dark"){
+    document.body.classList.add("dark-mode");
+    toggleBtn.innerHTML = "☀️";
+}
+
+toggleBtn.addEventListener("click", function(){
+    document.body.classList.toggle("dark-mode");
+
+    if(document.body.classList.contains("dark-mode")){
+        localStorage.setItem("theme", "dark");
+        toggleBtn.innerHTML = "☀️";
+    } else {
+        localStorage.setItem("theme", "light");
+        toggleBtn.innerHTML = "🌙";
+    }
+});
+
+function debounce(func, delay) {
+    let timeout;
+    return function (...args) {
+        clearTimeout(timeout);
+        timeout = setTimeout(() => func.apply(this, args), delay);
+    };
+}
+
+function highlight(text, keyword) {
+    const regex = new RegExp(`(${keyword})`, "gi");
+    return text.replace(regex, `<span class="text-warning fw-bold">$1</span>`);
+}
+
+
+
+const searchInput = document.getElementById("searchInput");
+const resultsContainer = document.getElementById("searchResults");
+
+let allJobs = [];
+
+// Load jobs once
+fetch("http://127.0.0.1:8000/api/jobs/")
+    .then(res => res.json())
+    .then(data => {
+        allJobs = data;
+    })
+    .catch(err => console.error("Failed to load jobs:", err));
+
+// Live search while typing
+searchInput.addEventListener("input", debounce(function () {
+
+    const keyword = this.value.trim().toLowerCase();
+
+    if (!keyword) {
+        resultsContainer.innerHTML = "";
+        return;
+    }
+
+    saveRecentSearch(keyword);
+
+    const filtered = allJobs.filter(job =>
+        job.title.toLowerCase().includes(keyword) ||
+        job.company.toLowerCase().includes(keyword) ||
+        job.location.toLowerCase().includes(keyword)
+    );
+
+    renderSearchResults(filtered, keyword);
+
+}, 300));
+
+function viewJob(id) {
+    window.location.href = `jobs.html?id=${id}`;
+}
+
+
+
+function renderSearchResults(jobs, keyword) {
+
+    resultsContainer.innerHTML = "";
+
+    if (jobs.length === 0) {
+        resultsContainer.innerHTML =
+            `<div class="col-12"><p class="text-muted">No jobs found</p></div>`;
+        return;
+    }
+
+    jobs.forEach(job => {
+        resultsContainer.innerHTML += `
+            <div class="col-md-4">
+                <div class="card shadow-sm border-0">
+                    <div class="card-body">
+                        <h5>${highlight(job.title, keyword)}</h5>
+                        <p class="mb-1"><strong>${highlight(job.company, keyword)}</strong></p>
+                        <p class="text-muted">${highlight(job.location, keyword)}</p>
+                        <button 
+    class="btn btn-outline-primary w-100"
+    onclick="viewJob(${job.id})">
+    View Details
+</button>
+
+                    </div>
+                </div>
+            </div>
+        `;
+    });
+}
+
+function saveRecentSearch(keyword) {
+    let searches = JSON.parse(localStorage.getItem("recentSearches")) || [];
+
+    if (!searches.includes(keyword)) {
+        searches.unshift(keyword);
+        searches = searches.slice(0, 5);
+        localStorage.setItem("recentSearches", JSON.stringify(searches));
+    }
+}
+
+
+</script>
+
+<script src="js/navbar.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
+
+
+</body>
+</html>

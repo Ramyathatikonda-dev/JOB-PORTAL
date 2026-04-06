@@ -1,0 +1,98 @@
+body {
+font-family: 'Segoe UI', sans-serif;
+animation: fadeInPage 0.8s ease-in-out;
+}
+
+@keyframes fadeInPage {
+    from {
+        opacity: 0;
+        transform: translateY(20px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+.navbar {
+background: linear-gradient(45deg, #1e3c72, #2a5298);
+}
+
+.hero {
+height: 100vh;
+background: url('https://images.unsplash.com/photo-1521737604893-d14cc237f11d') no-repeat center center/cover;
+}
+
+.job-card {
+    transition: all 0.4s ease;
+    opacity: 0;
+    transform: translateY(30px);
+    animation: cardAppear 0.8s forwards;
+}
+
+@keyframes cardAppear {
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+.job-card:hover {
+    transform: translateY(-10px);
+    box-shadow: 0 12px 25px rgba(0,0,0,0.2);
+}
+
+
+.job-card:hover {
+transform: translateY(-10px);
+box-shadow: 0 10px 30px rgba(0,0,0,0.2);
+}
+
+.auth-bg {
+background: linear-gradient(to right, #2a5298, #1e3c72);
+}
+
+.auth-card {
+width: 350px;
+border-radius: 15px;
+}
+
+.btn-warning {
+background-color: #ff9800;
+border: none;
+}
+
+.btn-warning:hover {
+background-color: #e68900;
+}
+
+
+/* DARK MODE */
+body.dark-mode {
+    background-color: #121212;
+    color: #ffffff;
+}
+
+/* Navbar dark */
+body.dark-mode .navbar {
+    background-color: #1f1f1f !important;
+}
+
+/* Cards */
+body.dark-mode .card {
+    background-color: #1e1e1e;
+    color: #ffffff;
+    border: 1px solid #333;
+}
+
+/* Footer */
+body.dark-mode footer {
+    background-color: #1f1f1f !important;
+}
+
+/* Inputs */
+body.dark-mode input {
+    background-color: #2a2a2a;
+    color: white;
+    border: 1px solid #444;
+}

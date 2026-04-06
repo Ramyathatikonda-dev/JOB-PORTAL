@@ -1,0 +1,231 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Jobs | TalentOrbit</title>
+
+<!-- Bootstrap -->
+<link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
+
+<!-- AOS Animation -->
+<link href="https://unpkg.com/aos@2.3.4/dist/aos.css" rel="stylesheet">
+
+<!-- Google Font -->
+<link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600;700&display=swap" rel="stylesheet">
+
+<style>
+
+/* GLOBAL */
+body{
+    font-family:'Poppins',sans-serif;
+    background:linear-gradient(135deg,#0f2027,#203a43,#2c5364);
+    color:white;
+    padding-top: 70px;
+    overflow-x:hidden;
+}
+
+/* NAVBAR */
+.navbar{
+    height: 70px;
+    backdrop-filter: blur(15px);
+    background: rgba(255,255,255,0.05);
+    border-bottom:1px solid rgba(255,255,255,0.1);
+}
+
+/* HERO */
+.page-header{
+    padding:100px 0 60px;
+    text-align:center;
+    background-color: rgba(255,255,255,0.03);
+}
+
+/* SEARCH + FILTER CARDS */
+.search-row .form-control,
+.search-row .form-select {
+    background: rgba(255,255,255,0.08);
+    backdrop-filter: blur(12px);
+    border-radius: 20px;
+    border:1px solid rgba(255,255,255,0.1);
+    color: white;
+    height: 60px;          /* same height */
+    font-size: 1rem;
+    padding: 0 15px;
+}
+
+.search-row .form-control::placeholder {
+    color: rgba(255,255,255,0.7);
+}
+
+.search-row .form-select option {
+    color: black;  /* options readable on dropdown */
+}
+
+/* GLASS JOB CARD */
+.job-card{
+    background:rgba(255,255,255,0.08);
+    backdrop-filter:blur(12px);
+    border-radius:20px;
+    padding:25px;
+    transition:0.4s;
+    border:1px solid rgba(255,255,255,0.1);
+}
+
+.job-card:hover{
+    transform:translateY(-10px);
+    box-shadow:0 20px 40px rgba(0,0,0,0.4);
+}
+
+/* BUTTON */
+.btn-apply{
+    background:linear-gradient(45deg,#ff8a00,#e52e71);
+    border:none;
+    color:white;
+    border-radius:50px;
+    padding:8px 20px;
+    transition:0.3s;
+}
+
+.btn-apply:hover{
+    transform:scale(1.05);
+}
+
+/* FOOTER */
+footer{
+    background:rgba(0,0,0,0.4);
+    padding:20px;
+    text-align:center;
+    margin-top:80px;
+}
+
+</style>
+</head>
+
+<body>
+
+<!-- NAVBAR -->
+<nav class="navbar navbar-expand-lg navbar-dark fixed-top">
+<div class="container">
+<a class="navbar-brand fw-bold" href="index.html">TalentOrbit</a>
+
+<button class="navbar-toggler" data-bs-toggle="collapse" data-bs-target="#navMenu">
+<span class="navbar-toggler-icon"></span>
+</button>
+
+<div class="collapse navbar-collapse" id="navMenu">
+<ul class="navbar-nav ms-auto">
+<li class="nav-item"><a class="nav-link" href="index.html">Home</a></li>
+<li class="nav-item"><a class="nav-link active" href="#">Jobs</a></li>
+<li class="nav-item"><a class="nav-link" href="about.html">About</a></li>
+<li class="nav-item"><a class="nav-link" href="contact.html">Contact</a></li>
+</ul>
+</div>
+</div>
+</nav>
+
+<!-- HEADER -->
+<section class="page-header">
+  <h1 data-aos="fade-down">Explore Opportunities</h1>
+  
+  <p class="lead mt-3" data-aos="fade-up" style="max-width:700px; margin:auto; line-height:1.6;">
+  Explore thousands of verified job openings from top companies across tech, business, and emerging industries.  
+  With smart search and seamless applications, TalentOrbit helps you turn your potential into your next career opportunity—fast and easy.
+</p>
+
+
+  <p class="mt-4 fw-semibold" data-aos="fade-up" data-aos-delay="200">
+    5,000+ Active Roles • 1,200+ Verified Companies • 50K+ Careers Accelerated
+  </p>
+</section>
+
+<!-- SEARCH + FILTERS -->
+<div class="container my-4">
+  <div class="row g-3 search-row">
+
+    <div class="col-md-4">
+      <input type="text" id="searchInput" class="form-control" placeholder="Search jobs...">
+    </div>
+
+    <div class="col-md-4">
+      <select id="locationFilter" class="form-select">
+        <option value="">All Locations</option>
+        <option value="Remote">Remote</option>
+        <option value="Hyderabad">Hyderabad</option>
+        <option value="Bangalore">Bangalore</option>
+        <option value="Chennai">Chennai</option>
+      </select>
+    </div>
+
+    <div class="col-md-4">
+      <select id="typeFilter" class="form-select">
+        <option value="">All Types</option>
+        <option value="Full-Time">Full-Time</option>
+        <option value="Part-Time">Part-Time</option>
+        <option value="Internship">Internship</option>
+      </select>
+    </div>
+
+  </div>
+</div>
+
+<!-- JOB LIST -->
+<div class="container my-5">
+  <div id="jobList" class="row g-4">
+    <!-- Job cards will be injected here by JS -->
+  </div>
+</div>
+
+<!-- Apply Job Modal -->
+<div class="modal fade" id="applyModal" tabindex="-1">
+  <div class="modal-dialog">
+    <div class="modal-content bg-dark text-white">
+      <div class="modal-header">
+        <h5 class="modal-title">Apply for Job</h5>
+        <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal" aria-label="Close"></button>
+      </div>
+      <div class="modal-body">
+        <form id="applyForm">
+          <input type="hidden" id="jobIndex">
+          <div class="mb-3">
+            <label for="applicantName" class="form-label">Full Name</label>
+            <input type="text" class="form-control" id="applicantName" required>
+          </div>
+
+          <div class="mb-3">
+            <label for="applicantEmail" class="form-label">Email</label>
+            <input type="email" class="form-control" id="applicantEmail" readonly>
+          </div>
+
+          <div class="mb-3">
+            <label for="applicantLocation" class="form-label">Location</label>
+            <input type="text" class="form-control" id="applicantLocation" required>
+          </div>
+
+          <div class="mb-3">
+            <label for="applicantResume" class="form-label">Resume (PDF)</label>
+            <input type="file" class="form-control" id="applicantResume" accept=".pdf" required>
+          </div>
+
+          <div class="mb-3">
+            <label for="applicantCoverLetter" class="form-label">Cover Letter</label>
+            <textarea class="form-control" id="applicantCoverLetter" rows="3"></textarea>
+          </div>
+
+          <button type="submit" class="btn btn-apply w-100">Submit Application</button>
+        </form>
+      </div>
+    </div>
+  </div>
+</div>
+
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
+<script src="js/jobs.js"></script>
+<script src="js/navbar.js"></script>
+
+<script src="https://unpkg.com/aos@2.3.4/dist/aos.js"></script>
+<script>
+AOS.init();
+</script>
+
+</body>
+</html>
